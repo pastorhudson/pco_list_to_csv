@@ -89,7 +89,9 @@ def parse_headcount_events():
 def get_headcount_data():
     headcount_data = {}
     for event_name, event in parse_headcount_events().items():
-        headcount_data[event_name] = get_headcounts(event[0], event[1])
+        hc_data = get_headcounts(event[0], event[1])
+        for hc in hc_data:
+            headcount_data[f"{event_name} {hc[0]}"] = hc[1]
 
     return headcount_data
 
