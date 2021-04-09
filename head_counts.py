@@ -1,17 +1,11 @@
-import pypco
 from dotenv import load_dotenv
 import os
-from datetime import datetime, timezone
+from util import get_local_time, get_pco
+from datetime import datetime
 
 
-load_dotenv('api_secret.env')  # take environment variables from api_secret.env
-pco = pypco.PCO(os.getenv('APPLICATION_ID'), os.getenv('SECRET'))
-
-
-def get_local_time(utc_dt):
-    """Takes a UTC timestamp from API and returns a local time timestamp in the form of 10:00 AM"""
-    tz_dt = utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=None)
-    return tz_dt.strftime("%I:%M %p")
+load_dotenv('config.env')  # take environment variables from config.env
+pco = get_pco()
 
 
 def get_event_time_name(event_time):
