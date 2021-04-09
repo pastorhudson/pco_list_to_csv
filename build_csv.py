@@ -6,6 +6,7 @@ import time
 import datetime
 from util import get_mondays, test_config
 from datetime import datetime, timedelta
+import pandas as pd
 startTime = time.time()
 
 fields = []
@@ -65,9 +66,11 @@ build_list_columns()
 
 
 # print(fields, row)
-
+print(fields)
 write_csv(fields, [row], get_filename())
-
+df = pd.DataFrame([row], columns=fields)
+df.to_clipboard(excel=True, index=False)
 
 executionTime = (time.time() - startTime)
 print('Execution time in seconds: ' + str(executionTime))
+print("Data added to clipboard")
