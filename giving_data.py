@@ -4,7 +4,7 @@ import locale
 from util import get_mondays, get_pco
 from datetime import datetime
 
-locale.setlocale(locale.LC_ALL, '')
+locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 load_dotenv('config.env')  # take environment variables from config.env
 
