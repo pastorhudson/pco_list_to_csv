@@ -21,13 +21,8 @@ def get_utc_dt(event_time):
 def get_mondays():
     """Returns a tuple with start and end Time Stamp Strings from last monday to midnight this monday."""
     today = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
-    # print(today)
     monday = today - timedelta(days=today.weekday()) - timedelta(weeks=1)
-    monday = monday.replace(hour=0, minute=0, second=0, microsecond=0)
-    next_monday = today + timedelta(days=today.weekday()) - timedelta(days=1) - timedelta(weeks=1)
-
-    # monday = monday.replace(tzinfo=timezone.utc).astimezone(tz=None)
-    # next_monday = next_monday.replace(tzinfo=timezone.utc).astimezone(tz=None)
+    next_monday = monday + timedelta(weeks=1)
 
     return monday, next_monday
 
@@ -72,4 +67,4 @@ def test_config():
 
 
 if __name__ == '__main__':
-    test_config()
+    print(get_mondays())
