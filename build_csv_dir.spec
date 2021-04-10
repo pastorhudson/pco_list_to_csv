@@ -8,9 +8,9 @@ def get_pandas_path():
     return pandas_path
 
 a = Analysis(['build_csv.py'],
-             pathex=['/Users/girlpolo14/PyCharmProjects/pco_mac_numbers_metrics'],
+             pathex=['/Users/girlpolo14/pyprojects/pco_mac_numbers_metrics-main'],
              binaries=[],
-             datas=[],
+             datas=['config.csv'],
              hiddenimports=['cmath'],
              hookspath=[],
              runtime_hooks=[],
@@ -28,15 +28,22 @@ pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
           a.scripts,
-          a.binaries,
-          a.zipfiles,
-          a.datas,
           [],
+          exclude_binaries=True,
           name='build_csv',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          upx_exclude=[],
-          runtime_tmpdir=None,
           console=True )
+coll = COLLECT(exe,
+               a.binaries,
+               a.zipfiles,
+               a.datas,
+               strip=False,
+               upx=True,
+               upx_exclude=[],
+               name='build_csv')
+
+import shutil
+shutil.copyfile('config.env', '{0}/config.env'.format(DISTPATH))
