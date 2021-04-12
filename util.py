@@ -48,9 +48,6 @@ def get_sunday():
         return sunday
     elif today.weekday() == 6:
         return today
-    # else:
-    #     sunday = today -timedelta(days=today.weekday()+1) - timedelta(weeks=1)
-    #     return sunday
 
 
 def get_pco():
@@ -74,7 +71,7 @@ def get_pco():
 
 
 def test_config():
-    print("Checking Config File")
+    print("Checking Config File", end=" ")
     try:
         load_dotenv('config.env')  # take environment variables from config.env
 
@@ -92,9 +89,10 @@ def test_config():
         if os.getenv('HEAD_COUNT_EVENTS') is None:
             print("Application_ID not found in config.env")
         get_pco()
+        print("✔")
 
     except Exception as e:
-        # print(type(e))
+        print(e)
         sys.exit(0)
 
 
