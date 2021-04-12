@@ -2,16 +2,12 @@
 
 block_cipher = None
 
-def get_pandas_path():
-    import pandas
-    pandas_path = pandas.__path__[0]
-    return pandas_path
 
 a = Analysis(['build_csv.py'],
-             pathex=['/Users/girlpolo14/PyCharmProjects/pco_mac_numbers_metrics'],
+             pathex=['C:\\Users\\geekt\\PycharmProjects\\2021\\pco_mac_numbers_metrics'],
              binaries=[],
              datas=[],
-             hiddenimports=['cmath'],
+             hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
              excludes=[],
@@ -19,11 +15,6 @@ a = Analysis(['build_csv.py'],
              win_private_assemblies=False,
              cipher=block_cipher,
              noarchive=False)
-
-dict_tree = Tree(get_pandas_path(), prefix='pandas', excludes=["*.pyc"])
-a.datas += dict_tree
-a.binaries = filter(lambda x: 'pandas' not in x[0], a.binaries)
-
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
@@ -32,11 +23,11 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           [],
-          name='build_csv',
+          name='Get PCO Metrics',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=True )
+          console=True , icon='pcochef.ico')
