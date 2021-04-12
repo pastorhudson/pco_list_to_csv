@@ -30,15 +30,17 @@ def get_filename():
 
 def send_to_clipboard(fields, rows):
     clipboard_string = ""
-    if os.getenv('CLIPBOARD_HEADER') == "True":
-        if len(fields) > 0 and len(row) > 0:
+    if len(fields) > 0 and len(row) > 0:
+        if os.getenv('CLIPBOARD_HEADER') == "True":
             for field in fields:
                 clipboard_string += f"{field}\t"
             clipboard_string += "\n"
+        for r in row:
+            clipboard_string += f"{r}\t"
+    print(clipboard_string)
 
-    for r in row:
-        clipboard_string += f"{r}\t"
     pyperclip.copy(clipboard_string)
+
     return
 
 
