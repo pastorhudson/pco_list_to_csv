@@ -37,7 +37,6 @@ def send_to_clipboard(fields, rows):
             clipboard_string += "\n"
         for r in row:
             clipboard_string += f"{r}\t"
-
     pyperclip.copy(clipboard_string)
 
     return
