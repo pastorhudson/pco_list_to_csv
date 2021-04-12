@@ -40,6 +40,19 @@ def get_mondays():
     return monday, next_monday
 
 
+def get_sunday():
+    """Returns the last sunday or today if it is sunday"""
+    today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    if today.weekday() < 6:
+        sunday = today - timedelta(days=today.weekday()+1)
+        return sunday
+    elif today.weekday() == 6:
+        return today
+    # else:
+    #     sunday = today -timedelta(days=today.weekday()+1) - timedelta(weeks=1)
+    #     return sunday
+
+
 def get_pco():
     try:
         load_dotenv('config.env')  # take environment variables from config.env
@@ -86,4 +99,4 @@ def test_config():
 
 
 if __name__ == '__main__':
-    test_config()
+    print(get_sunday())

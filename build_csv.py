@@ -25,16 +25,16 @@ def get_filename():
     # We actually pull donations given before Monday at Midnight to ensure we get all the Sunday Donations.
     # So to make the filename reflect sunday we need to backup a day.
     next_monday = mondays[1] - timedelta(days=1)
-    return f"{p.expanduser()}{datetime.strftime(mondays[0], '%m-%d-%Y')}-{datetime.strftime(next_monday, '%m-%d-%Y')}.csv"
+    return f"{p.expanduser()}/{datetime.strftime(mondays[0], '%m-%d-%Y')}-{datetime.strftime(next_monday, '%m-%d-%Y')}.csv"
 
 
 def send_to_clipboard(fields, rows):
     clipboard_string = ""
     if len(fields) > 0 and len(row) > 0:
-        if os.getenv('CLIPBOARD_HEADER') == "True":
-            for field in fields:
-                clipboard_string += f"{field}\t"
-            clipboard_string += "\n"
+        # if os.getenv('CLIPBOARD_HEADER') == "True":
+        #     for field in fields:
+        #         clipboard_string += f"{field}\t"
+        #     clipboard_string += "\n"
         for r in row:
             clipboard_string += f"{r}\t"
     print(clipboard_string)

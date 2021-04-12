@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 import os
-from util import get_local_time, get_pco
-from datetime import datetime
+from util import get_local_time, get_pco, get_sunday
+from datetime import datetime, timedelta
 
 
 load_dotenv('config.env')  # take environment variables from config.env
@@ -44,27 +44,30 @@ def get_headcounts(event_id, attendance_type_id):
     """Takes event_id, and attendance type, and returns a list of tuples of (time,headcount) that match that event."""
 
     headcounts = pco.iterate(f'https://api.planningcenteronline.com/check-ins/v2/events/{event_id}/'
-                             f'attendance_types/{attendance_type_id}/headcounts?order=-created_at&include=event_time')
+                             f'attendance_types/{attendance_type_id}/headcounts?order=-created_at&include=event_time'
+                             f'&per_page=100')
 
     headcount_data = []
-    initial_date = ""
     for headcount in headcounts:
-
         if headcount['data']['relationships']['attendance_type']['data']['id'] == attendance_type_id:
             count = headcount['data']['attributes']['total']  # headcount of event and attendance_type
-            date = headcount['data']['attributes']['created_at']  # date of event
+            # date = headcount['data']['attributes']['created_at']  # date of event
             event_time = pco.get("https://api.planningcenteronline.com/check-ins/v2/event_times/"
                                  f"{headcount['data']['relationships']['event_time']['data']['id']}")
 
             utc_dt = datetime.strptime(event_time['data']['attributes']['starts_at'], '%Y-%m-%dT%H:%M:%SZ')  # 2021-04-04T04:00:00Z
-            event_time_name = get_local_time(utc_dt)
-            count_tup = (event_time_name, count)
 
-            if date[0:11] == initial_date[0:11] or initial_date == "":
+            if get_sunday().date() == utc_dt.date():
+                event_time_name = get_local_time(utc_dt)
+                count_tup = (event_time_name, count)
                 headcount_data.append(count_tup)
-                initial_date = date
+            elif utc_dt.date() >= get_sunday().date() - timedelta(weeks=1):
+                event_time_name = get_local_time(utc_dt)
+                count_tup = (event_time_name, "NO DATA")
+                headcount_data.append(count_tup)
             else:
                 break
+
     return headcount_data
 
 
