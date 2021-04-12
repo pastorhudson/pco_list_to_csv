@@ -1,7 +1,8 @@
 from datetime import datetime, timezone, timedelta
+from dateutil import tz
 from dotenv import load_dotenv
 import pypco
-from pypco import PCOCredentialsException
+from pypco import PCOCredentialsException, PCORequestException
 import os
 import sys
 
@@ -19,10 +20,22 @@ def get_utc_dt(event_time):
 
 
 def get_mondays():
-    """Returns a tuple with start and end Time Stamp Strings from last monday to midnight this monday."""
-    today = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
-    monday = today - timedelta(days=today.weekday()) - timedelta(weeks=1)
+    """Returns a tuple with start and end Time Stamp Strings from last monday to midnight this monday.
+    Unless it is a monday. In that case we actually want the previous period."""
+    today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+
+    if today.weekday() < 6:
+        # Lookup last week (Two monday's ago)
+        monday = today - timedelta(days=today.weekday()) - timedelta(weeks=1)
+        pass
+    else:
+        # lookup this week (The Last monday to the current Sunday - today)
+        monday = today - timedelta(days=today.weekday())
+
+        pass
     next_monday = monday + timedelta(weeks=1)
+    monday = monday.astimezone(tz.tzutc())
+    next_monday = next_monday.astimezone(tz.tzutc())
 
     return monday, next_monday
 
@@ -32,15 +45,19 @@ def get_pco():
         load_dotenv('config.env')  # take environment variables from config.env
     except Exception as e:
         print(e)
+
     try:
         pco = pypco.PCO(os.getenv('APPLICATION_ID'), os.getenv('SECRET'))
         test = pco.get('https://api.planningcenteronline.com/people/v2/me')
         return pco
 
-    except Exception as e:
-        # print(e)
-        print("NO Config found")
+    except PCORequestException:
+        print("ERROR - Could not authenticate using Planning Center API Keys in config.env")
         sys.exit(0)
+
+    # except PCOCredentialsException:
+    #     print("Nope")
+    #     sys.exit(0)
 
 
 def test_config():
@@ -61,10 +78,12 @@ def test_config():
 
         if os.getenv('HEAD_COUNT_EVENTS') is None:
             print("Application_ID not found in config.env")
+        get_pco()
 
     except Exception as e:
-        print(e)
+        # print(type(e))
+        sys.exit(0)
 
 
 if __name__ == '__main__':
-    print(get_mondays())
+    test_config()

@@ -37,6 +37,7 @@ def get_donations(date_range, fund_ids):
                             '&include=designations,labels'
                             '&per_page=100')
 
+    # Print API Endpoint URL for debugging
     # print(f'https://api.planningcenteronline.com/giving/v2/donations?'
     #                         f'order=-recieved_at'
     #                         f'&where[received_at][gte]={date_range[0]}'
