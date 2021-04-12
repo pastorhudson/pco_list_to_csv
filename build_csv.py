@@ -6,9 +6,12 @@ import time
 import datetime
 from util import get_mondays, test_config
 from datetime import datetime, timedelta
+import pyperclip
+from dotenv import load_dotenv
 import pathlib
-import pandas as pd
+import os
 startTime = time.time()
+load_dotenv('config.env')  # take environment variables from config.env
 
 fields = []
 row = []
@@ -16,36 +19,54 @@ row = []
 
 # name of csv file
 def get_filename():
-    pathlib.Path(f'{pathlib.Path.home()}/Documents/PCOMetrics').mkdir(parents=True, exist_ok=True)
-
+    p = pathlib.Path('~/Documents/PCOMetrics/')
+    p.expanduser().mkdir(parents=True, exist_ok=True)
     mondays = get_mondays()
     # We actually pull donations given before Monday at Midnight to ensure we get all the Sunday Donations.
     # So to make the filename reflect sunday we need to backup a day.
     next_monday = mondays[1] - timedelta(days=1)
-    return f"{pathlib.Path.home()}/Documents/PCOMetrics/{datetime.strftime(mondays[0], '%m-%d-%Y')}-{datetime.strftime(next_monday, '%m-%d-%Y')}.csv"
+    return f"{p.expanduser()}{datetime.strftime(mondays[0], '%m-%d-%Y')}-{datetime.strftime(next_monday, '%m-%d-%Y')}.csv"
+
+
+def send_to_clipboard(fields, rows):
+    clipboard_string = ""
+    if os.getenv('CLIPBOARD_HEADER') == "True":
+        if len(fields) > 0 and len(row) > 0:
+            for field in fields:
+                clipboard_string += f"{field}\t"
+            clipboard_string += "\n"
+
+    for r in row:
+        clipboard_string += f"{r}\t"
+    pyperclip.copy(clipboard_string)
+    return
 
 
 def build_donation_columns():
-    print("Getting Giving Data")
+    print("Getting Giving Data", end=" ")
     for key, value in get_donation_data().items():
         fields.append(key)
         row.append(value)
+    print("✔")
     return
 
 
 def build_list_columns():
-    print("Getting People List Data")
+    print("Getting People List Data", end=" ")
     for key, value in get_list_data().items():
         fields.append(key)
         row.append(value)
+    print("✔")
+
     return
 
 
 def build_headcount_columns():
-    print("Getting Headcount Data")
-    for key, value in get_headcount_data().items():
+    print("Getting Headcount Data", end=" ")
+    for key, value in get_headcount_data().items():  # Reversing order because we want 9am service first
         fields.append(key)
         row.append(value)
+    print("✔")
     return
 
 
@@ -62,15 +83,16 @@ def write_csv(fields, rows, filename):
 
 
 test_config()
-print(f"Building CSV for {get_filename()}")
+print(f"Building CSV:\n"
+      f"file://{get_filename()}")
 build_donation_columns()
 build_headcount_columns()
 build_list_columns()
 
 write_csv(fields, [row], get_filename())
-df = pd.DataFrame([row], columns=fields)
-df.to_clipboard(excel=True, index=False)
+
 
 executionTime = (time.time() - startTime)
 print('Execution time in seconds: ' + str(executionTime))
+send_to_clipboard(fields, row)
 print("Data added to clipboard")
