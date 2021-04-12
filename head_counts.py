@@ -84,7 +84,7 @@ def get_headcount_data():
     headcount_data = {}
     for event_name, event in parse_headcount_events().items():
         hc_data = get_headcounts(event[0], event[1])
-        for hc in hc_data:
+        for hc in reversed(hc_data):  # Reversed so 9am service is listed first - later services have newer create dates
             headcount_data[f"{event_name} {hc[0]}"] = hc[1]
 
     return headcount_data
