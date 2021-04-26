@@ -83,16 +83,18 @@ def write_csv(fields, rows, filename):
 
 
 test_config()
-print(f"Building CSV:\n"
-      f"file://{get_filename()}")
+
 build_donation_columns()
 build_headcount_columns()
 build_list_columns()
 
 write_csv(fields, [row], get_filename())
 
-
-executionTime = (time.time() - startTime)
-print('Execution time in seconds: ' + str(executionTime))
 send_to_clipboard(fields, row)
 print("Data added to clipboard")
+print(f"Building CSV:\n"
+      f"file://{get_filename()}")
+executionTime = (time.time() - startTime)
+print('Execution time in seconds: ' + str(executionTime))
+
+
