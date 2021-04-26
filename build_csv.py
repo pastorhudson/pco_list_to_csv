@@ -53,7 +53,7 @@ def build_donation_columns():
 
 def build_list_columns():
     print("Getting People List Data", end=" ")
-    for key, value in get_list_data().items():
+    for key, value in sorted(get_list_data().items()):
         fields.append(key)
         row.append(value)
     print("✔")

@@ -27,4 +27,4 @@ def get_list_data():
 
 
 if __name__ == '__main__':
-    print(get_list_data())
+    print(sorted(get_list_data()))
