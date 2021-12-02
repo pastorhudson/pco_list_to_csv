@@ -15,5 +15,6 @@ HEAD_COUNT_EVENTS=Church:Worship Cent,Church:RK Volunteer
 # Comma separated list of funds you want to pull
 FUNDS=General,Building Fund
 ```
-
 On Mac this confit.env needs to be put in your user home directory.
+
+To run with python `python3 build_csv.py`
