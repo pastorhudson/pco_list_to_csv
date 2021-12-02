@@ -1,5 +1,5 @@
-# pco_mac_numbers_metrics
-This is a script to update a Mac Numbers Document created by Adam Boylan
+# pco_list_to_csv
+This is a script to dump selected lists, and other check in's data to a csv
 
 # Configure
 All configuration is handled in the config.env file.
